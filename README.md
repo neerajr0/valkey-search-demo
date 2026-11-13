@@ -36,7 +36,6 @@ docker network create valkey-demo-net
 docker run -d \
   --name valkey-search-demo \
   --network valkey-demo-net \
-  -p 6379:6379 \
   -v ./libsearch.so:/usr/lib/valkey/modules/libsearch.so:ro \
   valkey/valkey:unstable \
   valkey-server \
@@ -48,7 +47,7 @@ docker build -t valkey-search-demo-app .
 docker run -d \
   --name valkey-search-demo-app \
   --network valkey-demo-net \
-  -p 8501:8501 \
+  -p 127.0.0.1:8501:8501 \
   -e VALKEY_HOST=valkey-search-demo \
   -e VALKEY_PORT=6379 \
   valkey-search-demo-app
@@ -57,6 +56,10 @@ docker run -d \
 ### 3. Open the app
 
 Open [http://localhost:8501](http://localhost:8501) in your browser.
+
+Both containers are reachable only from this machine: Valkey publishes no port (the app
+reaches it over the Docker network) and the app is published on `127.0.0.1` only. Neither
+has authentication, so don't publish them on other interfaces.
 
 If you're on a remote dev desktop, forward port 8501 to your local machine:
 ```bash
