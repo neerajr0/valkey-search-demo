@@ -4,13 +4,19 @@ A multi-language product search demo showcasing Valkey Search 1.3 features throu
 
 ## Features Demonstrated
 
-| Feature | Module | PR |
-|---------|--------|-----|
-| Multi-language FTS | `features/multilang_fts.py` | [#1263](https://github.com/valkey-io/valkey-search/pull/1263) |
-| BM25STD Text Scoring | `features/bm25_scoring.py` | [#1287](https://github.com/valkey-io/valkey-search/pull/1287) |
-| Vector Search (FLOAT16/BFLOAT16 + Range) | `features/vector_search.py` | [#1001](https://github.com/valkey-io/valkey-search/pull/1001), [#985](https://github.com/valkey-io/valkey-search/pull/985) |
-| FT.HYBRID Search | `features/hybrid_search.py` | [#1083](https://github.com/valkey-io/valkey-search/pull/1083) |
-| Paginated Results (Cursors) | `features/cursor_paging.py` | [#1394](https://github.com/valkey-io/valkey-search/pull/1394) |
+Each page of the web UI is one part of a shop, with the shopper's view on top and the exact
+command underneath. Every page opens with what the feature is for, and only the Cursors page
+shows timings, because it is the only performance feature.
+
+| Page | Feature | What it shows | Module | PR |
+|------|---------|---------------|--------|-----|
+| 🌍 Multi-language FTS | Correctness | One shop in English, German, Spanish and French; natural queries in each | `demo_pages/multilang.py` | [#1263](https://github.com/valkey-io/valkey-search/pull/1263) |
+| 📊 BM25 Scoring | Relevance | Without vs with ranking; `$weight` boosts; `SCORE_FIELD` review scores | `demo_pages/scoring.py` | [#1287](https://github.com/valkey-io/valkey-search/pull/1287) |
+| 📄 Cursors | Performance | "Load more" from a cursor; offset vs cursor paging, measured live | `demo_pages/cursors.py` | [#1394](https://github.com/valkey-io/valkey-search/pull/1394) |
+| 🔀 FT.HYBRID | Relevance | Keyword vs semantic vs fused shelves, with the RRF arithmetic | `demo_pages/hybrid.py` | [#1083](https://github.com/valkey-io/valkey-search/pull/1083) |
+| 📏 KNN vs Vector Range | Correctness | A "more like this" shelf: KNN pads, VECTOR_RANGE shows only real matches | `demo_pages/vector_range.py` | [#985](https://github.com/valkey-io/valkey-search/pull/985) |
+
+The interactive CLI (`demo/cli.py`) still uses the older `features/` modules.
 
 ## Prerequisites
 
@@ -36,7 +42,6 @@ docker network create valkey-demo-net
 docker run -d \
   --name valkey-search-demo \
   --network valkey-demo-net \
-  -p 6379:6379 \
   -v ./libsearch.so:/usr/lib/valkey/modules/libsearch.so:ro \
   valkey/valkey:unstable \
   valkey-server \
@@ -48,7 +53,7 @@ docker build -t valkey-search-demo-app .
 docker run -d \
   --name valkey-search-demo-app \
   --network valkey-demo-net \
-  -p 8501:8501 \
+  -p 127.0.0.1:8501:8501 \
   -e VALKEY_HOST=valkey-search-demo \
   -e VALKEY_PORT=6379 \
   valkey-search-demo-app
@@ -58,19 +63,21 @@ docker run -d \
 
 Open [http://localhost:8501](http://localhost:8501) in your browser.
 
+Both containers are reachable only from this machine: Valkey publishes no port (the app
+reaches it over the Docker network) and the app is published on `127.0.0.1` only. Neither
+has authentication, so don't publish them on other interfaces.
+
 If you're on a remote dev desktop, forward port 8501 to your local machine:
 ```bash
 # SSH tunnel
 ssh -L 8501:localhost:8501 user@your-dev-host
 ```
 
-### 4. Load sample data
+### 4. Sample data
 
-Use the sidebar in the Streamlit UI, or via the CLI:
-```bash
-docker exec -it valkey-search-demo-app python -m demo.cli
-# Then press 's' to set up sample data
-```
+Each web UI page creates its own index and catalog the first time you open it. The Cursors
+page generates 100,000 products, and the semantic pages download the embedding model
+(all-MiniLM-L6-v2) on first use, so open each page once before presenting.
 
 ### 5. Tear down
 
@@ -146,7 +153,15 @@ valkey-search-demo/
 │   ├── client.py             # Valkey client wrapper
 │   ├── data_loader.py        # Sample data generation + embedding
 │   └── index_manager.py      # FT.CREATE / FT.DROPINDEX
-├── features/                 # One module per 1.3 feature
+├── demo_pages/               # Web UI pages, one per 1.3 feature
+│   ├── common.py             # Shared storefront cards, banners, helpers
+│   ├── catalog.py            # Product catalogs for every page
+│   ├── multilang.py          # Localized storefront
+│   ├── scoring.py            # BM25STD without vs with ranking
+│   ├── cursors.py            # Load more + offset vs cursor timing
+│   ├── hybrid.py             # Keyword vs semantic vs FT.HYBRID
+│   └── vector_range.py       # KNN vs VECTOR_RANGE recommendations
+├── features/                 # Older per-feature modules, used by the CLI
 │   ├── base.py               # Abstract base class for demos
 │   ├── multilang_fts.py      # Multi-language FTS (Snowball stemmers)
 │   ├── bm25_scoring.py       # BM25STD scoring with WITHSCORES
