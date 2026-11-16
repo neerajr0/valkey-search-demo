@@ -65,11 +65,11 @@ def hybrid_args(q: str, v: bytes, k: int, fusion: str, alpha: float, beta: float
 
 
 def render(client) -> None:
-    st.title("🔀 Search that understands the shopper")
+    st.title("Hybrid search (keyword + vector)")
     st.markdown(
-        "A shopper describes what they want in their own words. Keyword search only finds the words "
-        "they happened to use; semantic search only finds the vibe. `FT.HYBRID` runs both over one "
-        "index and fuses the two rankings in a single command."
+        "Runs a keyword (BM25STD) search and a vector (KNN) search over one index and fuses the two "
+        "rankings with `FT.HYBRID` in a single command. Compares each arm alone against the fused "
+        "result."
     )
     feature_purpose(
         "relevance",

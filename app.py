@@ -55,7 +55,7 @@ def get_client():
 # -----------------------------------------------------------------------------
 def page_home():
     """Home page with feature overview."""
-    st.title("🔍 Valkey Search 1.3 Demo")
+    st.title("Valkey Search 1.3 Demo")
     st.markdown("### Shopping App - Feature Showcase")
     
     st.markdown("""
@@ -68,8 +68,6 @@ def page_home():
     | 📏 KNN vs Vector Range | Top-K vs everything within a radius |
     | 🔀 FT.HYBRID | Text vs vector vs fused (RRF / LINEAR / FUNCTION) |
     | 📄 Cursors | Paging with WITHCURSOR; offset vs cursor timing |
-    
-    👈 **Select a feature from the sidebar** to try it out!
     """)
     
     # Connection status
