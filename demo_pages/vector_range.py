@@ -46,7 +46,7 @@ def with_match_badge(rows: list[dict], field: str, exclude: str | None = None) -
 
 
 def render(client) -> None:
-    st.title("Vector range search (VECTOR_RANGE)")
+    st.title("Vector range search")
     st.markdown(
         "Returns every product within a distance radius of a query vector, rather than a fixed "
         "count like `KNN`. Useful when you want all sufficiently-similar items and no filler."

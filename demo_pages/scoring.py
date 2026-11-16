@@ -102,9 +102,9 @@ def behind(*cmds: tuple[str, list], note: str = "") -> None:
 
 
 def render(client) -> None:
-    st.title("Text relevance scoring (BM25STD)")
+    st.title("Text relevance scoring")
     st.markdown(
-        "Ranks results by how well each document matches the query. Shows two ways to adjust that "
+        "Ranks results by how well each document matches the query using BM25STD. Shows two ways to adjust that "
         "order: query-time term boosts and a per-product score field."
     )
     feature_purpose(
