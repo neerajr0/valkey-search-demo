@@ -261,8 +261,13 @@ def setup_catalog(client) -> None:
 
 
 def ensure_catalog(client) -> bool:
-    """Make sure the shop's index exists. Returns True when it is ready."""
-    if not index_exists(client, CAT_INDEX):
+    """Make sure the shop's index exists and is populated. Returns True when ready.
+
+    Rebuilds when the index is absent OR empty: a half-failed load (e.g. the
+    embedding model download throwing after FT.CREATE) leaves an empty index,
+    and an existence-only check would never repopulate it.
+    """
+    if not index_exists(client, CAT_INDEX) or num_docs(client, CAT_INDEX) == 0:
         with st.spinner(f"Opening the shop: indexing and embedding {len(CATALOG)} products..."):
             setup_catalog(client)
     return True
