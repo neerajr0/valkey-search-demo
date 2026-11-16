@@ -203,10 +203,10 @@ def benchmark(client) -> None:
 
 
 def render(client) -> None:
-    st.title("📄 Browsing a huge catalog")
+    st.title("Paging a large catalog with cursors")
     st.markdown(
-        "A shopper scrolling a category page is the everyday case for cursors: run the search once, "
-        "then hand out the rest of the results batch by batch as they scroll."
+        "Runs the search once, then returns the results in batches as the shopper pages through a "
+        "category, instead of re-running the query for each page."
     )
     feature_purpose(
         "performance",

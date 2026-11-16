@@ -46,11 +46,10 @@ def with_match_badge(rows: list[dict], field: str, exclude: str | None = None) -
 
 
 def render(client) -> None:
-    st.title("📏 “More like this” that means it")
+    st.title("Vector range search")
     st.markdown(
-        "Recommendation shelves are where a similarity **threshold** beats a fixed count. "
-        "`KNN` always returns K products; `VECTOR_RANGE` returns everything within a distance "
-        "radius and nothing else."
+        "Returns every product within a distance radius of a query vector, rather than a fixed "
+        "count like `KNN`. Useful when you want all sufficiently-similar items and no filler."
     )
     feature_purpose(
         "correctness",

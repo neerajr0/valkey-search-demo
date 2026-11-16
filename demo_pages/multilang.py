@@ -85,10 +85,11 @@ SORTS = {
 
 
 def render(client) -> None:
-    st.title("🌍 A shop in your language")
+    st.title("Multi-language storefront")
     st.markdown(
-        "One catalog, one `store:` key prefix, one index per language. Switch the store and "
-        "the whole shop — products, categories and search — speaks that language."
+        "One index per language, keyed by a `store:` prefix. Selecting a language switches the "
+        "catalog and runs search through that language's analyzer — its own stemming, stop words "
+        "and case folding."
     )
 
     feature_purpose(

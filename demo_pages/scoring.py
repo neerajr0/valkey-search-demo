@@ -102,11 +102,10 @@ def behind(*cmds: tuple[str, list], note: str = "") -> None:
 
 
 def render(client) -> None:
-    st.title("📊 Best match first")
+    st.title("Text relevance scoring")
     st.markdown(
-        "A search box is only as good as its first row. New in 1.3, BM25STD ranks every match by how "
-        "well it fits the query, and gives the shop two levers over that order: query-time boosts and "
-        "a per-product score field."
+        "Ranks results by how well each document matches the query using BM25STD. Shows two ways to adjust that "
+        "order: query-time term boosts and a per-product score field."
     )
     feature_purpose(
         "relevance",
